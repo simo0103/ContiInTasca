@@ -18,6 +18,7 @@ class App extends Component {
       spesa: this.state.spesa,
       importo: this.state.importo
     }
+    
     listaUscite.push(uscite);
     this.setState({
       spesa: '',
