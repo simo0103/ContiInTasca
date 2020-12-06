@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import WelcomePage from './WelcomePage/index';
-
-import './App.scss';
+import WelcomePage from './Pages/WelcomePage/index';
 
 class App extends Component {
   render() {
