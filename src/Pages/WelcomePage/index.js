@@ -4,59 +4,6 @@ import { Container, Box, Typography, FormControl, FormGroup, FormControlLabel, C
 import './index.scss';
 
 class Welcome extends Component {
-  handleChange(e) {
-     console.log(e.target.name)
-    this.setState({
-      elementChecked: e.target.name,
-      checked: e.target.checked,
-    })
-   }
-  
-   handleSubmit(e) {
-    e.preventDefault();
-    const listaTipiDiPagamento = firebase.database().ref('listaTipiDiPagamento');
-    const tipoDiPagamento = {
-      type: this.state.elementChecked
-    }
-     
-    listaTipiDiPagamento.push(tipoDiPagamento);
-    this.setState({
-      elementChecked: '',
-    })
-     listaTipiDiPagamento.on('value', m => {
-       console.log(m.val)
-     })
-   }
-  
-  componentDidMount() {
-    const listaTipiDiPagamento = firebase.database().ref('listaTipiDiPagamento');
-    listaTipiDiPagamento.on('value', (snapshot) => {
-      let types = snapshot.val();
-      let newState = [];
-      for (let type in types) {
-        newState.push({
-          id: type,
-          elementChecked: types[type].elementChecked
-        });
-      }
-      this.setState({
-        listaUscite : newState
-      })
-    })
-  }
-
-
-  constructor() {
-    super();
-    this.state = {
-      checked: false,
-      elementChecked: '',
-      listaTipiDiPagamento: []
-    }
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
 
   render() {
     return (
@@ -68,7 +15,7 @@ class Welcome extends Component {
           <Box>
             <Typography align="center" className="MuiTypography-p">Cosa c'è nel tuo portafoglio?</Typography>  
           </Box>
-          <Box>
+          {/* <Box>
             <form component="fieldset" onSubmit={this.handleSubmit}>
             <FormGroup>
               <FormControlLabel
@@ -109,7 +56,7 @@ class Welcome extends Component {
             </Button>
             </FormGroup>
           </form>
-          </Box>
+          </Box> */}
          
 
         </Container>

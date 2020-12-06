@@ -1,10 +1,15 @@
 import React, { Component } from "react";
-import WelcomePage from './Pages/WelcomePage/index';
+import { initDB } from "./firebase";
+// import WelcomePage from './Pages/WelcomePage/index';
+
 
 class App extends Component {
+  componentDidMount() {
+    initDB(1)
+  }
   render() {
     return (
-      <WelcomePage />
+      <p>ciao</p>
     )
   }
 }
