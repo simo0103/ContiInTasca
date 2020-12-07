@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import firebase from '../firebase';
+import firebase from './firebase';
 import { Button, Container, Box, ListItem } from '@material-ui/core';
 import DeleteOutlineSharpIcon from '@material-ui/icons/DeleteOutlineSharp';
-import './App.scss';
 
-class App extends Component {
+class Esempio extends Component {
   handleChange(e) {
     this.setState({
       [e.target.name]: e.target.value
@@ -64,7 +63,7 @@ class App extends Component {
   
   render() {
     return (
-      <div className="app">
+      <div className="Esempio">
         <Container className="container">
           <section className="addSpesa">
             <form onSubmit={this.handleSubmit}>
@@ -99,7 +98,7 @@ class App extends Component {
  }
 }
 
-export default App;
+export default Esempio;
 // src
 // --- layout
 //     -Nav
@@ -122,5 +121,5 @@ export default App;
 
 // --- helpers
 
-// App.js
-// app.scss
+// Esempio.js
+// Esempio.scss
