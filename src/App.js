@@ -24,7 +24,7 @@ class App extends Component {
     return (
       <Fragment>
         {
-          this.state.pageName === "registration" ? <Registration changePage={this.changePage}></Registration> : <ChoosePaymentType></ChoosePaymentType>
+          this.state.pageName === "registration" ? <Registration changePage={this.changePage}></Registration> : <div>ciao</div>
         }
       </Fragment>
       

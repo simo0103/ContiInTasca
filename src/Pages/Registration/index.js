@@ -30,8 +30,8 @@ class Registration extends Component {
         setTimeout(()=>{ this.setState({
             open: false,            
             users: ''
-        }),
-            this.props.changePage('cards')
+        });
+            this.props.changePage('page')
         }, 4000)
         
     }
@@ -74,7 +74,7 @@ class Registration extends Component {
                     </Typography>
                 </Box>
                 <section className="addusers">
-                    <form autoComplete="off" onSubmit={this.handleSubmit}>
+                    <form autoComplete="off" onSubmit={(e)=> this.handleSubmit(e)}>
                         <Box my={4}>
                             <TextField type="text" name="users" id="outlined-basic" variant="outlined" fullWidth color="secondary" onChange={this.handleChange} value={this.state.users}  />
                         </Box>
