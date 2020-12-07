@@ -9,19 +9,15 @@ class Welcome extends Component {
     return (
       <div className="welcome">
         <Container className="container" maxWidth="sm">
-          <Box margin={5}>
-            <Typography align="center" className="MuiTypography-h2">BENVENUTO</Typography>  
+  
+          <Box my={8}>
+            <Typography align="center" variant="h3">COSA C'E' NEL TUO PORTAFOGLIO?</Typography>  
           </Box>
           <Box>
-            <Typography align="center" className="MuiTypography-p">Cosa c'è nel tuo portafoglio?</Typography>  
-          </Box>
-          {/* <Box>
-            <form component="fieldset" onSubmit={this.handleSubmit}>
-            <FormGroup>
+            <form component="fieldset">
               <FormControlLabel
                   control={
-                    <Checkbox checked={this.state.checked} value={this.state.elementChecked} name="cash"
-                      onChange={this.handleChange}
+                    <Checkbox name="cash"
                     />
                   }
                 label="Contanti"
@@ -29,7 +25,6 @@ class Welcome extends Component {
               <FormControlLabel
                   control={
                     <Checkbox name="bancomat" 
-                     onChange={this.handleChange}
                     />
                   }
                 label="Bancomat"
@@ -37,7 +32,6 @@ class Welcome extends Component {
               <FormControlLabel
                   control={
                     <Checkbox name="prepaid card" 
-                     onChange={this.handleChange}
                     />
                   }
                 label="Carta Prepagata"
@@ -45,18 +39,18 @@ class Welcome extends Component {
               <FormControlLabel
                   control={
                     <Checkbox name="buoni pasto" 
-                      onChange={this.handleChange}
                     />
                   }
                 label="Buoni Pasto"
               />
+              <Box my={8}>
+                <Button variant="contained" size="large" fullWidth color="secondary" type="submit">
+                  Conferma
+              </Button>
+              </Box>
 
-              <Button variant="contained" color="secondary" type="submit">
-                Conferma
-            </Button>
-            </FormGroup>
           </form>
-          </Box> */}
+          </Box>
          
 
         </Container>

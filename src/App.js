@@ -22,11 +22,12 @@ class App extends Component {
   }
   render() {
     return (
-      <Fragment>
-        {
-          this.state.pageName === "registration" ? <Registration changePage={this.changePage}></Registration> : <ChoosePaymentType></ChoosePaymentType>
-        }
-      </Fragment>
+      <ChoosePaymentType></ChoosePaymentType>
+      // <Fragment>
+      //   {
+      //     this.state.pageName === "registration" ? <Registration changePage={this.changePage}></Registration> : <ChoosePaymentType></ChoosePaymentType>
+      //   }
+      // </Fragment>
       
     )
   }
