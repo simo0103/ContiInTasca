@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import { initDB } from "./firebase";
-import Registration from "./Pages/Registration";
+import Registration from "./Pages/Registration/index";
 // import WelcomePage from './Pages/WelcomePage/index';
 
 

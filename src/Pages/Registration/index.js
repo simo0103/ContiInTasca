@@ -1,72 +1,83 @@
 import React, {Component} from "react";
-import { Container, TextField, Button, Box, spacing } from '@material-ui/core';
+import { Container, TextField, Button, Box } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
 import firebase from '../../firebase';
 
 
 class Registration extends Component {
     handleChange(e) {
         this.setState({
-            [this.userName]: e.target.value
+        [e.target.name]: e.target.value
         });
     }
 
     handleSubmit(e) {
         e.preventDefault();
-        const speseUtente = firebase.database().ref('speseUtente');
-        const userName = {
-            userName: this.state.userName,
+        const listaUtenti = firebase.database().ref('listaUtenti');
+        const users = {
+            users: this.state.users,
         }
 
-        speseUtente.push(userName);
+        listaUtenti.push(users);
         this.setState({
-            userName: '',
+            users: '',
         })
-        speseUtente.on('value', u => {
+        listaUtenti.on('value', u => {
             console.log(u.val())
         })
+        this.setState({
+            open: true
+        })
+        setTimeout(()=> this.setState({
+            open: false
+        }), 2000)
     }
     constructor() {
         super();
         this.state = {
-            userName: '',
-            speseUtente: []
+            users: '',
+            open: false
         }
+        
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
-        const usersInList = firebase.database().ref('speseUtente');
+        const usersInList = firebase.database().ref('listaUtenti');
         usersInList.on('value', (snapshot) => {
             let users = snapshot.val();
             let newState = [];
             for (let user in users) {
                 newState.push({
                     id: user,
-                    userName: users[user].userName
+                    users: users[user].users
                 });
             }
-            this.setState({
-                speseUtente: newState
-            })
         })
     }
-    
-
+  
     render() {
         return (
-        
-            <Container className="registration" maxWidth="sm" align="center">
+            <Container maxWidth="sm" align="center" className="Registration">
                 <p>Come ti chiami?</p>
-                <form noValidate autoComplete="off" onSubmit={this.handleSubmit} >
-                    <Box my={4}>
-                        <TextField id="outlined-basic" label="Name" variant="outlined" fullWidth color="secondary" onChange={this.handleChange}  />
-                    </Box>
-                    <Button variant="contained" type="submit" color="secondary">Submit</Button>
-                </form>
+                <section className="addusers">
+                    <form autoComplete="off" onSubmit={this.handleSubmit}>
+                        <Box my={4}>
+                            <TextField type="text" name="users" id="outlined-basic" variant="outlined" fullWidth color="secondary" onChange={this.handleChange} value={this.state.users}  />
+                        </Box>
+                        <Button type="submit" color="secondary" disabled={!this.state.users} variant="contained">Submit</Button>
+                    </form>
+                </section>
+                {
+                    this.state.open &&
+                    <Alert severity="success">
+                        <AlertTitle>Success</AlertTitle>
+                    </Alert>
+                } 
             </Container>
         )
     }
 }
-
 export default Registration;
