@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { Container, TextField, Button, Box } from '@material-ui/core';
+import { Container, TextField, Button, Box, Typography } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 import firebase from '../../firebase';
@@ -20,18 +20,20 @@ class Registration extends Component {
         }
 
         listaUtenti.push(users);
-        this.setState({
-            users: '',
-        })
+       
         listaUtenti.on('value', u => {
             console.log(u.val())
         })
         this.setState({
             open: true
         })
-        setTimeout(()=> this.setState({
-            open: false
-        }), 2000)
+        setTimeout(()=>{ this.setState({
+            open: false,            
+            users: ''
+        }),
+            this.props.changePage('cards')
+        }, 4000)
+        
     }
     constructor() {
         super();
@@ -61,21 +63,33 @@ class Registration extends Component {
     render() {
         return (
             <Container maxWidth="sm" align="center" className="Registration">
-                <p>Come ti chiami?</p>
+                <Box my={8}>
+                    <Typography variant="h2" color="secondary">
+                        BENVENUTO!
+                    </Typography>
+                </Box>
+                <Box my={8}>
+                    <Typography variant="h3">
+                       Come ti chiami?
+                    </Typography>
+                </Box>
                 <section className="addusers">
                     <form autoComplete="off" onSubmit={this.handleSubmit}>
                         <Box my={4}>
                             <TextField type="text" name="users" id="outlined-basic" variant="outlined" fullWidth color="secondary" onChange={this.handleChange} value={this.state.users}  />
                         </Box>
-                        <Button type="submit" color="secondary" disabled={!this.state.users} variant="contained">Submit</Button>
+                        <Button type="submit" size="large" fullWidth color="secondary" disabled={!this.state.users} variant="contained">Conferma</Button>
                     </form>
+                 
                 </section>
+                <Box my={8}>
                 {
                     this.state.open &&
                     <Alert severity="success">
-                        <AlertTitle>Success</AlertTitle>
+                        <AlertTitle>Ciao {this.state.users}! </AlertTitle>
                     </Alert>
                 } 
+                </Box>
             </Container>
         )
     }
