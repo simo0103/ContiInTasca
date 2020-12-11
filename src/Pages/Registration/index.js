@@ -6,6 +6,17 @@ import firebase from '../../firebase';
 
 
 class Registration extends Component {
+    constructor() {
+        super();
+        this.state = {
+            users: '',
+            open: false
+        }
+        
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
     handleChange(e) {
         this.setState({
         [e.target.name]: e.target.value
@@ -24,39 +35,27 @@ class Registration extends Component {
         listaUtenti.on('value', u => {
             console.log(u.val())
         })
+
         this.setState({
             open: true
         })
         setTimeout(()=>{ this.setState({
             open: false,            
-            users: ''
-        }),
+            users: '',
+        });
             this.props.changePage('cards')
         }, 4000)
         
-    }
-    constructor() {
-        super();
-        this.state = {
-            users: '',
-            open: false
-        }
-        
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
         const usersInList = firebase.database().ref('listaUtenti');
         usersInList.on('value', (snapshot) => {
             let users = snapshot.val();
-            let newState = [];
-            for (let user in users) {
-                newState.push({
-                    id: user,
-                    users: users[user].users
-                });
-            }
+            this.setState({
+                allUsers: users,
+                usersId: Object.entries(users).map(([k,v]) => k)
+            }) 
         })
     }
   
