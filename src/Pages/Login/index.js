@@ -11,57 +11,42 @@ import AlertTitle from "@material-ui/lab/AlertTitle";
 import firebase from "../../firebase";
 
 class Login extends Component {
-  constructor() {
-    super();
-    this.state = {
-      users: "",
-      open: false,
-    };
-
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.login = this.login.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(e) {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    const listaUtenti = firebase.database().ref("listaUtenti");
-    const users = {
-      users: this.state.users,
-    };
-
-    listaUtenti.push(users);
-
-    listaUtenti.on("value", (u) => {
-      console.log(u.val());
-    });
-
-    this.setState({
-      open: true,
-    });
-    setTimeout(() => {
-      this.setState({
-        open: false,
-        users: "",
-      });
-      this.props.changePage("cards");
-    }, 4000);
   }
 
   componentDidMount() {
-    const usersInList = firebase.database().ref("listaUtenti");
-    usersInList.on("value", (snapshot) => {
-      let users = snapshot.val();
+    var listaUtenti = firebase.database().ref("listaUtenti");
+    listaUtenti.on("value", (snapshot) => {
+      const users = snapshot.val();
       this.setState({
-        allUsers: users,
-        usersId: Object.entries(users).map(([k, v]) => k),
+        users: users,
       });
     });
+  }
+
+  handleChange(e) {
+    e.preventDefault();
+    let { name, value } = e.target;
+    this.setState({
+      [name]: value,
+    });
+  }
+
+  login() {
+    let value = this.state.userNameTyped;
+    let users = this.state.users || {};
+    let userName = Object.values(users).find((x) => x.users === value);
+    userName
+      ? this.setState({
+          openSuccess: true,
+        })
+      : this.setState({
+          openError: true,
+        });
   }
 
   render() {
@@ -76,35 +61,39 @@ class Login extends Component {
           <Typography variant="h3">Qual è il tuo username?</Typography>
         </Box>
         <section className="addusers">
-          <form autoComplete="off" onSubmit={this.handleSubmit}>
-            <Box my={4}>
-              <TextField
-                type="text"
-                name="users"
-                id="outlined-basic"
-                variant="outlined"
-                fullWidth
-                color="secondary"
-                onChange={this.handleChange}
-                value={this.state.users}
-              />
-            </Box>
-            <Button
-              type="submit"
-              size="large"
+          <Box my={4}>
+            <TextField
+              type="text"
+              name="userNameTyped"
+              id="outlined-basic"
+              variant="outlined"
+              value={this.state.userNameTyped || ""}
               fullWidth
               color="secondary"
-              disabled={!this.state.users}
-              variant="contained"
-            >
-              Conferma
-            </Button>
-          </form>
+              onChange={this.handleChange}
+            />
+          </Box>
+          <Button
+            size="large"
+            fullWidth
+            color="secondary"
+            variant="contained"
+            onClick={this.login}
+          >
+            Conferma
+          </Button>
         </section>
         <Box my={8}>
-          {this.state.open && (
+          {this.state.openSuccess && (
             <Alert severity="success">
-              <AlertTitle>Bentornato {this.state.users}! </AlertTitle>
+              <AlertTitle>Bentornato {this.state.userNameTyped}! </AlertTitle>
+            </Alert>
+          )}
+        </Box>
+        <Box my={8}>
+          {this.state.openError && (
+            <Alert severity="success">
+              <AlertTitle>Utente non registrato! </AlertTitle>
             </Alert>
           )}
         </Box>
