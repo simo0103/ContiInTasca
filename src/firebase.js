@@ -18,20 +18,31 @@ export function initDB(id) {
     checked: false,
     saldo: 0
    });
+
   firebase.database().ref(id + '/bancomat').set({
     checked: false,
     saldo: 0
   });
+
   firebase.database().ref(id + '/prepagata').set({
     checked: false,
     saldo: 0
   });
+  
    firebase.database().ref(id + '/buonipasto').set({
     checked: false,
     saldo: 0,
     quantity: 0
   });
 
+}
+
+export function getUserFromDb() {
+  var userIDref = firebase.database().ref('listaUtenti/');
+  userIDref.on('value', (snapshot) =>{
+  const data = snapshot.val();
+  console.log(data)
+});
 }
 
 export default firebase;
