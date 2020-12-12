@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { getUserFromDb } from "./firebase";
 import Registration from "./Pages/Registration/index";
+import Login from "./Pages/Login/index";
 import ChoosePaymentType from "./Pages/ChoosePaymentType/index";
 import { Typography, Button, Container, Box } from "@material-ui/core";
 
@@ -64,7 +65,7 @@ class App extends Component {
             registration: (
               <Registration changePage={this.changePage}></Registration>
             ),
-            login: <div>Login</div>,
+            login: <Login></Login>
           }[page]
         }
 
