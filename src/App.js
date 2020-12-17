@@ -23,7 +23,16 @@ class App extends Component {
       pageName: page,
     });
   }
+
   render() {
+    const buttonStyleLogin = {
+      backgroundColor: "#009688",
+      color: "white",
+    };
+    const buttonStyleRegistration = {
+      backgroundColor: "#f44336",
+      color: "white",
+    };
     let page = this.state.pageName;
     return (
       <Fragment>
@@ -39,9 +48,9 @@ class App extends Component {
                   </Box>
                   <Box component="span" m={1}>
                     <Button
+                      style={buttonStyleLogin}
                       type="submit"
                       size="large"
-                      color="secondary"
                       variant="contained"
                       onClick={() => this.changePage("login")}
                     >
@@ -50,9 +59,9 @@ class App extends Component {
                   </Box>
                   <Box component="span" m={1}>
                     <Button
+                      style={buttonStyleRegistration}
                       type="submit"
                       size="large"
-                      color="secondary"
                       variant="contained"
                       onClick={() => this.changePage("registration")}
                     >
@@ -65,7 +74,7 @@ class App extends Component {
             registration: (
               <Registration changePage={this.changePage}></Registration>
             ),
-            login: <Login></Login>
+            login: <Login></Login>,
           }[page]
         }
 
