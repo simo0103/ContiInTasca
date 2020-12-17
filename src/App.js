@@ -29,11 +29,14 @@ class App extends Component {
       backgroundColor: "#009688",
       color: "white",
     };
+
     const buttonStyleRegistration = {
       backgroundColor: "#f44336",
       color: "white",
     };
+
     let page = this.state.pageName;
+
     return (
       <Fragment>
         {
@@ -77,10 +80,6 @@ class App extends Component {
             login: <Login></Login>,
           }[page]
         }
-
-        {/* {
-  this.state.pageName === "registration" ? : <ChoosePaymentType></ChoosePaymentType>
-  } */}
       </Fragment>
     );
   }
