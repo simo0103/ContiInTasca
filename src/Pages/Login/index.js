@@ -50,12 +50,18 @@ class Login extends Component {
     let users = this.state.users || {};
     let userName = Object.values(users).find((x) => x.users === value);
     userName
-      ? this.setState({
-          openSuccess: true,
-        })
+      ? this.setState(
+          {
+            openSuccess: true,
+          },
+          this.goToNextPage()
+        )
       : this.setState({
           openError: true,
         });
+  }
+
+  goToNextPage() {
     setTimeout(() => {
       this.changePage("otherPage");
     }, 2000);
@@ -116,7 +122,7 @@ class Login extends Component {
                 </Box>
                 <Box my={8}>
                   {this.state.openError && (
-                    <Alert severity="success">
+                    <Alert severity="warning">
                       <AlertTitle>Utente non registrato! </AlertTitle>
                     </Alert>
                   )}
