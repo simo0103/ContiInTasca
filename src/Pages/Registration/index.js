@@ -40,11 +40,11 @@ class Registration extends Component {
   handleSubmit(e) {
     e.preventDefault();
     const listaUtenti = firebase.database().ref("listaUtenti");
-    const users = {
+    const newUser = {
       users: this.state.users,
     };
 
-    listaUtenti.push(users);
+    listaUtenti.push(newUser);
 
     listaUtenti.on("value", (u) => {
       console.log(u.val());
