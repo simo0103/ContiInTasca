@@ -66,6 +66,7 @@ class Registration extends Component {
     const usersInList = firebase.database().ref("listaUtenti");
     usersInList.on("value", (snapshot) => {
       let users = snapshot.val();
+      console.log(users);
       this.setState({
         allUsers: users,
         usersId: Object.entries(users).map(([k, v]) => k),
