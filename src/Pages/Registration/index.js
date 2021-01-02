@@ -10,21 +10,26 @@ import Alert from "@material-ui/lab/Alert";
 import AlertTitle from "@material-ui/lab/AlertTitle";
 import firebase from "../../firebase";
 import ChoosePaymentType from "../ChoosePaymentType";
+import "firebase/auth";
+
 import App from "../../App";
 
 class Registration extends Component {
   constructor() {
     super();
     this.state = {
-      users: "",
-      open: false,
+      email: "",
+      password: "",
+      username: "",
+      openSuccess: false,
+      openError: false,
+      errorMessage: "",
       pageName: "registrationPage",
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
   changePage(page) {
     this.setState({
       pageName: page,
@@ -39,39 +44,34 @@ class Registration extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const listaUtenti = firebase.database().ref("listaUtenti");
-    const newUser = {
-      users: this.state.users,
-    };
-
-    listaUtenti.push(newUser);
-
-    listaUtenti.on("value", (u) => {
-      console.log(u.val());
-    });
-
-    this.setState({
-      open: true,
-    });
-    setTimeout(() => {
-      this.setState({
-        open: false,
-        users: "",
+    var email = this.state.email;
+    var password = this.state.password;
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((user) => {
+        this.setState({
+          openSuccess: true,
+        });
+        setTimeout(() => {
+          this.setState({
+            open: false,
+            users: "",
+          });
+          this.changePage("choosePaymentType");
+        }, 4000);
+      })
+      .catch((error) => {
+        this.setState({
+          openError: true,
+          errorMessage: error.message,
+        });
+        setTimeout(() => {
+          this.setState({
+            open: false,
+          });
+        }, 2000);
       });
-      this.changePage("choosePaymentType");
-    }, 4000);
-  }
-
-  componentDidMount() {
-    const usersInList = firebase.database().ref("listaUtenti");
-    usersInList.on("value", (snapshot) => {
-      let users = snapshot.val();
-      console.log(users);
-      this.setState({
-        allUsers: users,
-        usersId: Object.entries(users).map(([k, v]) => k),
-      });
-    });
   }
 
   render() {
@@ -81,18 +81,34 @@ class Registration extends Component {
       backgroundColor: "#f44336",
       color: "white",
     };
+    const alertStyle = {
+      position: "absolute",
+      top: 0,
+      width: "600px",
+    };
     return (
       <Fragment>
         {
           {
             registrationPage: (
               <Container maxWidth="sm" align="center" className="Registration">
-                <Box my={8}>
+                <Box style={alertStyle}>
+                  {this.state.openError && (
+                    <Alert severity="error">
+                      <AlertTitle>{this.state.errorMessage}</AlertTitle>
+                    </Alert>
+                  )}
+                  {this.state.openSuccess && (
+                    <Alert severity="success">
+                      <AlertTitle>Ciao {this.state.username}! </AlertTitle>
+                    </Alert>
+                  )}
+                </Box>
+
+                <Box my={2}>
                   <Typography variant="h2">BENVENUTO!</Typography>
                 </Box>
-                <Box my={8}>
-                  <Typography variant="h3">Come ti chiami?</Typography>
-                </Box>
+
                 <section className="addusers">
                   <form
                     autoComplete="off"
@@ -101,13 +117,40 @@ class Registration extends Component {
                     <Box my={4}>
                       <TextField
                         type="text"
-                        name="users"
-                        id="outlined-basic"
+                        name="username"
+                        label="Come ti chiami?"
+                        id="input-username"
                         variant="outlined"
                         fullWidth
                         color="secondary"
                         onChange={this.handleChange}
-                        value={this.state.users}
+                        value={this.state.username}
+                      />
+                    </Box>
+                    <Box my={4}>
+                      <TextField
+                        type="text"
+                        name="email"
+                        label="E-mail"
+                        id="input-email"
+                        variant="outlined"
+                        fullWidth
+                        color="secondary"
+                        onChange={this.handleChange}
+                        value={this.state.email}
+                      />
+                    </Box>
+                    <Box my={4}>
+                      <TextField
+                        type="password"
+                        name="password"
+                        label="Password"
+                        id="input-password"
+                        variant="outlined"
+                        fullWidth
+                        color="secondary"
+                        onChange={this.handleChange}
+                        value={this.state.password}
                       />
                     </Box>
                     <Button
@@ -115,7 +158,6 @@ class Registration extends Component {
                       style={buttonStyleRegistration}
                       size="large"
                       fullWidth
-                      disabled={!this.state.users}
                       variant="contained"
                     >
                       Conferma
@@ -123,21 +165,17 @@ class Registration extends Component {
                   </form>
                 </section>
                 <Box my={8}>
-                  {this.state.open && (
-                    <Alert severity="success">
-                      <AlertTitle>Ciao {this.state.users}! </AlertTitle>
-                    </Alert>
-                  )}
+                  <Button
+                    style={buttonStyleRegistration}
+                    type="submit"
+                    cursor="pointer"
+                    size="large"
+                    variant="contained"
+                    onClick={() => this.changePage("firstPage")}
+                  >
+                    INDIETRO
+                  </Button>
                 </Box>
-                <Button
-                  style={buttonStyleRegistration}
-                  type="submit"
-                  size="large"
-                  variant="contained"
-                  onClick={() => this.changePage("firstPage")}
-                >
-                  INDIETRO
-                </Button>
               </Container>
             ),
             choosePaymentType: (
