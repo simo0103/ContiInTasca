@@ -10,25 +10,22 @@ import Alert from "@material-ui/lab/Alert";
 import AlertTitle from "@material-ui/lab/AlertTitle";
 import firebase from "../../firebase";
 import App from "../../App";
+import "firebase/auth";
 
 class Login extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
+      email: "",
+      password: "",
+      username: "",
+      openSuccess: false,
+      openError: false,
+      errorMessage: "",
       pageName: "loginPage",
     };
-    this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogin = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
-  }
-
-  componentDidMount() {
-    var listaUtenti = firebase.database().ref("listaUtenti");
-    listaUtenti.on("value", (snapshot) => {
-      const users = snapshot.val();
-      this.setState({
-        users: users,
-      });
-    });
   }
 
   changePage(page) {
@@ -38,27 +35,40 @@ class Login extends Component {
   }
 
   handleChange(e) {
-    e.preventDefault();
-    let { name, value } = e.target;
     this.setState({
-      [name]: value,
+      [e.target.name]: e.target.value,
     });
   }
 
-  handleLogin() {
-    let value = this.state.userNameTyped;
-    let users = this.state.users || {};
-    let userName = Object.values(users).find((x) => x.users === value);
-    userName
-      ? this.setState(
+  getUserInfo() {
+    firebase.auth().onAuthStateChanged((user) => {
+      this.setState({
+        username: user.displayName,
+      });
+    });
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(this.state.email, this.state.password)
+      .then((user) => {
+        this.getUserInfo();
+        this.setState(
           {
             openSuccess: true,
           },
           this.goToNextPage()
-        )
-      : this.setState({
+        );
+      })
+      .catch((error) => {
+        this.setState({
+          errorMessage: error.message,
           openError: true,
         });
+      });
   }
 
   goToNextPage() {
@@ -84,46 +94,61 @@ class Login extends Component {
                 <Box my={8}>
                   <Typography variant="h2">Login</Typography>
                 </Box>
-                <Box my={8}>
-                  <Typography variant="h3">Qual è il tuo username?</Typography>
-                </Box>
+
                 <section className="addusers">
-                  <Box my={4}>
-                    <TextField
-                      type="text"
-                      name="userNameTyped"
-                      id="outlined-basic"
-                      variant="outlined"
-                      value={this.state.userNameTyped || ""}
-                      fullWidth
-                      color="secondary"
-                      onChange={this.handleChange}
-                    />
-                  </Box>
-                  <Button
-                    style={buttonStyleLogin}
-                    size="large"
-                    fullWidth
-                    variant="contained"
-                    onClick={this.handleLogin}
+                  <form
+                    autoComplete="off"
+                    onSubmit={(e) => this.handleSubmit(e)}
                   >
-                    Conferma
-                  </Button>
+                    <Box my={4}>
+                      <TextField
+                        type="text"
+                        name="email"
+                        label="E-mail"
+                        id="input-email"
+                        variant="outlined"
+                        fullWidth
+                        color="secondary"
+                        onChange={this.handleChange}
+                        value={this.state.email}
+                      />
+                    </Box>
+                    <Box my={4}>
+                      <TextField
+                        type="password"
+                        name="password"
+                        label="Password"
+                        id="input-password"
+                        variant="outlined"
+                        fullWidth
+                        color="secondary"
+                        onChange={this.handleChange}
+                        value={this.state.password}
+                      />
+                    </Box>
+                    <Button
+                      type="submit"
+                      style={buttonStyleLogin}
+                      size="large"
+                      fullWidth
+                      variant="contained"
+                    >
+                      Conferma
+                    </Button>
+                  </form>
                 </section>
 
                 <Box my={8}>
                   {this.state.openSuccess && (
                     <Alert severity="success">
-                      <AlertTitle>
-                        Bentornato {this.state.userNameTyped}!{" "}
-                      </AlertTitle>
+                      <AlertTitle>Bentornato {this.state.username}</AlertTitle>
                     </Alert>
                   )}
                 </Box>
                 <Box my={8}>
                   {this.state.openError && (
                     <Alert severity="warning">
-                      <AlertTitle>Utente non registrato! </AlertTitle>
+                      <AlertTitle>{this.state.errorMessage}</AlertTitle>
                     </Alert>
                   )}
                 </Box>

@@ -49,14 +49,16 @@ class Registration extends Component {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then((user) => {
+      .then((newUser) => {
+        newUser.user.updateProfile({
+          displayName: this.state.username,
+        });
         this.setState({
           openSuccess: true,
         });
         setTimeout(() => {
           this.setState({
             open: false,
-            users: "",
           });
           this.changePage("choosePaymentType");
         }, 4000);
