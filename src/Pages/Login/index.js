@@ -8,7 +8,9 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import AlertTitle from "@material-ui/lab/AlertTitle";
-import firebase from "../../firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/database";
 import App from "../../App";
 import "firebase/auth";
 

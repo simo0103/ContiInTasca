@@ -11,11 +11,14 @@ import {
   Button,
 } from "@material-ui/core";
 import "./index.scss";
+import "firebase/auth";
+import "firebase/database";
 
 class Welcome extends Component {
   constructor() {
     super();
     this.state = {
+      userId: "",
       tipoPagamento: "",
     };
 
@@ -29,6 +32,13 @@ class Welcome extends Component {
   }
 
   render() {
+    const user = firebase.auth().currentUser;
+
+    if (user) {
+      this.state.userId = user.uid;
+    } else {
+      console.log("error current user");
+    }
     return (
       <div className="welcome">
         <Container className="container" maxWidth="sm">
@@ -37,6 +47,9 @@ class Welcome extends Component {
               COSA C'E' NEL TUO PORTAFOGLIO?
             </Typography>
           </Box>
+          <Box>Data from parent is:{this.props.userId}</Box>
+          <Box>Data id:{this.state.userId}</Box>
+
           <Box>
             <form component="fieldset">
               <FormControlLabel

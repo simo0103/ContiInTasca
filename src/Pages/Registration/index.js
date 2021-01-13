@@ -8,11 +8,11 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import AlertTitle from "@material-ui/lab/AlertTitle";
+import App from "../../App";
 import firebase from "../../firebase";
 import ChoosePaymentType from "../ChoosePaymentType";
 import "firebase/auth";
-
-import App from "../../App";
+import "firebase/database";
 
 class Registration extends Component {
   constructor() {
@@ -25,6 +25,8 @@ class Registration extends Component {
       openError: false,
       errorMessage: "",
       pageName: "registrationPage",
+      userIDref: "",
+      uid: "",
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -53,9 +55,25 @@ class Registration extends Component {
         newUser.user.updateProfile({
           displayName: this.state.username,
         });
+        this.state.userIDref = firebase
+          .database()
+          .ref(`/usersData/${newUser.user.uid}`);
+        this.state.uid = newUser.user.uid;
+        const userAdditionalInfos = {
+          qualcosa: "prova",
+        };
+
+        this.state.userIDref.push(userAdditionalInfos);
         this.setState({
           openSuccess: true,
         });
+        firebase
+          .database()
+          .ref("usersData/")
+          .on("value", (snapshot) => {
+            const data = snapshot.val();
+            console.log(data);
+          });
         setTimeout(() => {
           this.setState({
             open: false,
@@ -183,6 +201,7 @@ class Registration extends Component {
             choosePaymentType: (
               <ChoosePaymentType
                 changePage={this.changePage}
+                userId={this.state.uid}
               ></ChoosePaymentType>
             ),
             firstPage: <App></App>,

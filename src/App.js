@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from "react";
-import { getUserFromDb } from "./firebase";
 import Registration from "./Pages/Registration/index";
 import Login from "./Pages/Login/index";
-import ChoosePaymentType from "./Pages/ChoosePaymentType/index";
 import { Typography, Button, Container, Box } from "@material-ui/core";
 
 class App extends Component {
@@ -13,11 +11,6 @@ class App extends Component {
     };
     this.changePage = this.changePage.bind(this);
   }
-
-  componentDidMount() {
-    getUserFromDb();
-  }
-
   changePage(page) {
     this.setState({
       pageName: page,
